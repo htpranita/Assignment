@@ -1,0 +1,122 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Assignment</title>
+<link rel="stylesheet" href="style.css">
+ 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+
+$(document).ready(function(){
+
+//add company names to dropdown
+let dropdown = $('#company');
+dropdown.empty();
+dropdown.append('<option selected="true" disabled></option>');
+dropdown.prop('selectedIndex', 0);
+
+//get API URL
+const url = 'https://sandbox.iexapis.com/stable/stock/market/list/mostactive?token=Tpk_355f76ceef5a42a781108ab744eaa537';
+
+// Populate dropdown with list of companies
+$.getJSON(url, function (data) {
+  $.each(data, function (key, entry) {
+    dropdown.append($('<option></option>').attr('value', entry.attribute).text(entry.companyName));
+  })
+});
+
+// add rows
+var price =0;
+var OpenPrice=0;
+var closePrice=0;
+
+ var Heading ="<tr> <th >" + "symbol"  +"</th> <th >" +"Open" + "</th>         <th >" +"Close" +"</th> <th >" +"Latest Price" + "</th>"
+ 
+ // add selected values to the table when company is selected
+$("#company").change(function(){
+	
+        var selectedCompany = $(this).children("option:selected").val();                  
+        $.getJSON(url, function (data) {
+  $.each(data, function (key, entry) {
+  //alert( entry);
+  if(entry.companyName == selectedCompany){
+  //alert(entry.latestPrice);
+  price=entry.latestPrice;
+  OpenPrice =entry.latestPrice;
+  closePrice= entry.latestPrice;
+  
+  }
+   
+  })
+});
+   
+   //alert(price); 
+    var markup = "<tr style='background-color:#f1f1f1' >			<td > " + selectedCompany + "</td><td>" +"$"+ price + "</td><td><input type='checkbox' name='record'></td></tr>";
+     
+     var detailMarkup ="<tr style='background-color:#f1f1f1' >			<td > " + selectedCompany + "</td><td>" +"$"+ price + "</td> <td>" +"$"+ OpenPrice + "</td> <td>" +"$"+ closePrice + "</td> </tr>";
+     
+           $("div.container").append(markup);
+           
+              $("div.detailedData").append(Heading)
+             $("div.detailedData").append(detailMarkup)
+            
+    });
+
+});
+
+
+</script>
+
+
+</head>
+<body>
+ 
+<table  width="100%" cellspacing="0" cellpadding="0"  >
+	<tr>
+		<td colspan="3">
+		<p style="margin-left: 10px; margin-right: 10px; margin-top: 5px; margin-bottom: 10px">
+		<font face="Verdana" size="2">StockTickerApp &gt; Initial 1</font></td>
+	</tr>
+	<tr>
+		<td border: 1px solid grey colspan="3" bgcolor="#f1f1f1" height="50">
+			<div class="custom-select" style="width:200px; margin: 5px;">
+  				<select id="company">    
+  				</select>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3" height="5"> </td>
+	</tr>
+	<tr>
+		<td bgcolor="#F3F2F2" width="20%" height="500" align="left" valign="top" padding="5 px" border =" 1px solid">
+        <div class="container" margin-left="15px"></div>		     
+   		</td>
+        
+		<td width="5">&nbsp;
+        
+        </td>
+        
+        
+		<td bgcolor="#F3F2F2" idth="20%" height="500" align="left" valign="top" padding="5 px"> &nbsp;
+        <table>
+        
+        
+        <div class="detailedData"></div>
+        </table>
+        
+        </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		
+		
+	</tr>
+</table>
+ 
+</body>
+</html>
